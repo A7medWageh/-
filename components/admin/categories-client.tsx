@@ -202,12 +202,12 @@ export default function CategoriesClient() {
                   >
                     إلغاء
                   </Button>
-          )}
-        </div>      </div>
+                </div>
               </form>
             </DialogContent>
           </Dialog>
-        )}
+          )}
+        </div>
       </div>
 
       <Card>
