@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { MessageSquare, Phone } from 'lucide-react'
 import { MessageActions } from '@/components/admin/message-actions'
+import { DeleteAllMessagesButton } from '@/components/admin/delete-all-messages-button'
 import { AdminGuard } from '@/components/admin/admin-guard'
 
 export default async function AdminMessagesPage() {
@@ -27,7 +28,12 @@ export default async function AdminMessagesPage() {
   return (
     <AdminGuard>
       <div className="space-y-6" suppressHydrationWarning>
-        <h1 className="text-3xl font-bold">الرسائل</h1>
+        <div className="flex items-center justify-between gap-2 flex-wrap">
+          <h1 className="text-3xl font-bold">الرسائل</h1>
+          {messages && messages.length > 0 && (
+            <DeleteAllMessagesButton />
+          )}
+        </div>
 
         <Card suppressHydrationWarning>
           <CardHeader suppressHydrationWarning>

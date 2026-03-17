@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { type AdminUser } from '@/lib/types'
+import { DeleteAllUsersButton } from '@/components/admin/delete-all-users-button'
 
 export default function UsersClient() {
   const supabase = createClient()
@@ -149,15 +150,19 @@ export default function UsersClient() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2 flex-wrap">
         <h1 className="text-3xl font-bold">إدارة المديرين</h1>
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="gap-2">
-              <UserPlus className="h-4 w-4" />
-              إضافة مـدير جديد
-            </Button>
-          </DialogTrigger>
+        <div className="flex items-center gap-2">
+          {admins.length > 1 && (
+            <DeleteAllUsersButton />
+          )}
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="gap-2">
+                <UserPlus className="h-4 w-4" />
+                إضافة مـدير جديد
+              </Button>
+            </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>تعيين مدير جديد للنظام</DialogTitle>
@@ -207,6 +212,7 @@ export default function UsersClient() {
                   تـأكيد التعيين
                 </Button>
                 <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>إلغاء</Button>
+        </div>
               </div>
             </form>
           </DialogContent>

@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { ShoppingCart, Eye } from 'lucide-react'
+import { DeleteAllOrdersButton } from '@/components/admin/delete-all-orders-button'
 import { AdminGuard } from '@/components/admin/admin-guard'
 
 export default async function AdminOrdersPage() {
@@ -51,7 +52,12 @@ export default async function AdminOrdersPage() {
   return (
     <AdminGuard>
       <div className="space-y-6" suppressHydrationWarning>
-        <h1 className="text-3xl font-bold">الطلبات</h1>
+        <div className="flex items-center justify-between gap-2 flex-wrap">
+          <h1 className="text-3xl font-bold">الطلبات</h1>
+          {orders && orders.length > 0 && (
+            <DeleteAllOrdersButton />
+          )}
+        </div>
 
         <Card suppressHydrationWarning>
           <CardHeader suppressHydrationWarning>

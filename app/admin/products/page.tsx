@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Plus, Package, Pencil } from 'lucide-react'
 import { DeleteProductButton } from '@/components/admin/delete-product-button'
+import { DeleteAllProductsButton } from '@/components/admin/delete-all-products-button'
 import { AdminGuard } from '@/components/admin/admin-guard'
 
 export default async function AdminProductsPage() {
@@ -36,16 +37,21 @@ export default async function AdminProductsPage() {
   return (
     <AdminGuard>
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2 flex-wrap">
           <h1 className="text-3xl font-bold">المنتجات</h1>
-          {isOwner && (
-            <Link href="/admin/products/new">
-              <Button className="gap-2">
-                <Plus className="h-4 w-4" />
-                إضافة منتج
-              </Button>
-            </Link>
-          )}
+          <div className="flex items-center gap-2">
+            {isOwner && products && products.length > 0 && (
+              <DeleteAllProductsButton />
+            )}
+            {isOwner && (
+              <Link href="/admin/products/new">
+                <Button className="gap-2">
+                  <Plus className="h-4 w-4" />
+                  إضافة منتج
+                </Button>
+              </Link>
+            )}
+          </div>
         </div>
 
         <Card>

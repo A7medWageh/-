@@ -15,6 +15,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { DeleteAllCategoriesButton } from '@/components/admin/delete-all-categories-button'
 
 export default function CategoriesClient() {
   const supabase = createClient()
@@ -126,16 +127,20 @@ export default function CategoriesClient() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2 flex-wrap">
         <h1 className="text-3xl font-bold">الفئات</h1>
-        {isOwner && (
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="gap-2" onClick={() => handleOpenDialog()}>
-                <Plus className="h-4 w-4" />
-                إضافة فئة
-              </Button>
-            </DialogTrigger>
+        <div className="flex items-center gap-2">
+          {isOwner && categories.length > 0 && (
+            <DeleteAllCategoriesButton />
+          )}
+          {isOwner && (
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="gap-2" onClick={() => handleOpenDialog()}>
+                  <Plus className="h-4 w-4" />
+                  إضافة فئة
+                </Button>
+              </DialogTrigger>
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>
@@ -197,7 +202,8 @@ export default function CategoriesClient() {
                   >
                     إلغاء
                   </Button>
-                </div>
+          )}
+        </div>      </div>
               </form>
             </DialogContent>
           </Dialog>
