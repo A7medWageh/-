@@ -23,10 +23,10 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Delete all orders (and their items due to CASCADE)
-    const { error } = await supabase
+    const { error, count } = await supabase
       .from('orders')
       .delete()
-      .is('id', 'not null')
+      .gte('id', '00000000-0000-0000-0000-000000000000')
 
     if (error) {
       throw error
