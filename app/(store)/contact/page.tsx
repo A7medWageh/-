@@ -191,16 +191,22 @@ export default function ContactPage() {
 
                 <div className="space-y-2">
                   <Label htmlFor="message">الرسالة *</Label>
-                  <Textarea
-                    id="message"
-                    required
-                    value={formData.message}
-                    onChange={(e) =>
-                      setFormData({ ...formData, message: e.target.value })
-                    }
-                    placeholder="اكتب رسالتك هنا..."
-                    rows={5}
-                  />
+                  <div className="relative">
+                    <Textarea
+                      id="message"
+                      required
+                      value={formData.message}
+                      onChange={(e) =>
+                        setFormData({ ...formData, message: e.target.value })
+                      }
+                      placeholder="اكتب رسالتك هنا..."
+                      rows={6}
+                      className="resize-none border-2 focus:border-primary/50 rounded-lg p-4 bg-muted/40 text-base leading-relaxed"
+                    />
+                    <div className="absolute bottom-2 right-2 text-xs text-muted-foreground">
+                      {formData.message.length} حرف
+                    </div>
+                  </div>
                 </div>
 
                 <Button type="submit" className="w-full gap-2" disabled={loading}>

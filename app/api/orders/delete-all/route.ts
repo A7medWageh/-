@@ -26,7 +26,7 @@ export async function DELETE(request: NextRequest) {
     const { error } = await supabase
       .from('orders')
       .delete()
-      .neq('id', '00000000-0000-0000-0000-000000000000')
+      .is('id', 'not null')
 
     if (error) {
       throw error
