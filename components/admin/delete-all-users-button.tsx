@@ -11,6 +11,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Trash2, Loader2, AlertTriangle, CheckCircle2 } from 'lucide-react'
+import { useToast } from '@/hooks/use-toast'
 
 export function DeleteAllUsersButton() {
   const [isOpen, setIsOpen] = useState(false)
@@ -18,6 +19,7 @@ export function DeleteAllUsersButton() {
   const [deleteStatus, setDeleteStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
   const closeTimeoutRef = useRef<NodeJS.Timeout>()
+  const { toast } = useToast()
 
   const handleDeleteAll = async () => {
     setIsLoading(true)
@@ -31,6 +33,11 @@ export function DeleteAllUsersButton() {
 
       if (response.ok) {
         setDeleteStatus('success')
+        toast({
+          title: "تم حذف جميع المستخدمين بنجاح! ✅",
+          description: "جميع المستخدمين تم حذفهم نهائياً",
+          variant: "success",
+        })
         closeTimeoutRef.current = setTimeout(() => {
           setIsOpen(false)
           setDeleteStatus('idle')
@@ -39,11 +46,21 @@ export function DeleteAllUsersButton() {
       } else {
         setDeleteStatus('error')
         setErrorMessage(data.error || 'حدث خطأ أثناء حذف المستخدمين')
+        toast({
+          title: "فشل في حذف المستخدمين ❌",
+          description: data.error || 'حدث خطأ أثناء حذف المستخدمين',
+          variant: "destructive",
+        })
       }
     } catch (error) {
       console.error('Error deleting users:', error)
       setDeleteStatus('error')
       setErrorMessage('خطأ في الاتصال بالخادم')
+      toast({
+        title: "خطأ في الاتصال ❌",
+        description: 'خطأ في الاتصال بالخادم',
+        variant: "destructive",
+      })
     } finally {
       setIsLoading(false)
     }

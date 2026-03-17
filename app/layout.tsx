@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/theme-provider'
 import { CartProvider } from '@/lib/cart-context'
 import { LightningIntroWrapper } from '@/components/store/lightning-intro-wrapper'
+import { Toaster } from '@/components/ui/toaster'
 import './globals.css'
 
 const notoSansArabic = Noto_Sans_Arabic({ 
@@ -72,6 +73,7 @@ export default function RootLayout({
           <CartProvider>
             {children}
           </CartProvider>
+          <Toaster />
         </ThemeProvider>
         <Analytics />
       </body>

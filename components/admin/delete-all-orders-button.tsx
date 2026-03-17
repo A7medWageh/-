@@ -11,6 +11,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Trash2, Loader2, AlertTriangle, CheckCircle2 } from 'lucide-react'
+import { useToast } from '@/hooks/use-toast'
 
 export function DeleteAllOrdersButton() {
   const [isOpen, setIsOpen] = useState(false)
@@ -18,6 +19,7 @@ export function DeleteAllOrdersButton() {
   const [deleteStatus, setDeleteStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
   const closeTimeoutRef = useRef<NodeJS.Timeout>()
+  const { toast } = useToast()
 
   const handleDeleteAll = async () => {
     setIsLoading(true)
@@ -31,6 +33,11 @@ export function DeleteAllOrdersButton() {
 
       if (response.ok) {
         setDeleteStatus('success')
+        toast({
+          title: "تم حذف جميع الطلبات بنجاح! ✅",
+          description: "جميع الطلبات تم حذفها نهائياً",
+          variant: "success",
+        })
         closeTimeoutRef.current = setTimeout(() => {
           setIsOpen(false)
           setDeleteStatus('idle')
@@ -39,11 +46,21 @@ export function DeleteAllOrdersButton() {
       } else {
         setDeleteStatus('error')
         setErrorMessage(data.error || 'حدث خطأ أثناء حذف الطلبات')
+        toast({
+          title: "فشل في حذف الطلبات ❌",
+          description: data.error || 'حدث خطأ أثناء حذف الطلبات',
+          variant: "destructive",
+        })
       }
     } catch (error) {
       console.error('Error deleting orders:', error)
       setDeleteStatus('error')
       setErrorMessage('خطأ في الاتصال بالخادم')
+      toast({
+        title: "خطأ في الاتصال ❌",
+        description: 'خطأ في الاتصال بالخادم',
+        variant: "destructive",
+      })
     } finally {
       setIsLoading(false)
     }
