@@ -212,12 +212,12 @@ export default function UsersClient() {
                   تـأكيد التعيين
                 </Button>
                 <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>إلغاء</Button>
-        </div>
               </div>
             </form>
           </DialogContent>
         </Dialog>
       </div>
+    </div>
 
       <Card>
         <CardHeader>
