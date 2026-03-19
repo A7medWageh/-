@@ -79,6 +79,11 @@ export default function UsersClient() {
       return
     }
 
+    if (!formData.email) {
+      alert('❌ البريد الإلكتروني مطلوب')
+      return
+    }
+
     setSaving(true)
 
     try {
@@ -92,10 +97,23 @@ export default function UsersClient() {
         }])
 
       if (insertError) {
-        if (insertError.message?.includes('foreign key')) {
-          throw new Error('❌ هذا User ID غير موجود في النظام. تأكد من تسجيل المستخدم أولاً!')
+        console.error('Insert error details:', insertError)
+        
+        const errorMsg = insertError.message || ''
+        
+        if (errorMsg.includes('foreign key') || errorMsg.includes('violates')) {
+          throw new Error('❌ هذا User ID غير موجود في النظام.\n\nالخطوات:\n1. سجل المستخدم من صفحة تسجيل الدخول\n2. احصل على User ID من Supabase Dashboard\n3. حاول مرة أخرى')
         }
-        throw insertError
+        
+        if (errorMsg.includes('duplicate') || errorMsg.includes('already exists')) {
+          throw new Error('❌ هذا المدير مضاف بالفعل في النظام')
+        }
+        
+        if (errorMsg.includes('permission')) {
+          throw new Error('❌ لا توجد صلاحيات كافية لإضافة مدير')
+        }
+        
+        throw new Error(errorMsg || '❌ حدث خطأ غير معروف')
       }
       
       setDialogOpen(false)
@@ -104,7 +122,8 @@ export default function UsersClient() {
       fetchAdmins()
     } catch (error: any) {
       console.error('Add admin error:', error)
-      alert(error.message || 'حدث خطأ: تأكد من صحة البيانات المدخلة')
+      const errorMessage = error?.message || JSON.stringify(error) || 'حدث خطأ غير متوقع'
+      alert(errorMessage)
     } finally {
       setSaving(false)
     }
