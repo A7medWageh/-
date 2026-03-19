@@ -10,6 +10,15 @@ import { AdminGuard } from '@/components/admin/admin-guard'
 export default async function AdminOrdersPage() {
   const supabase = await createClient()
 
+  const { data: { user } } = await supabase.auth.getUser()
+  const { data: adminUser } = await supabase
+    .from('admin_users')
+    .select('role')
+    .eq('id', user?.id)
+    .single()
+
+  const isOwner = adminUser?.role === 'owner'
+
   const { data: orders } = await supabase
     .from('orders')
     .select('*')
@@ -54,7 +63,7 @@ export default async function AdminOrdersPage() {
       <div className="space-y-6" suppressHydrationWarning>
         <div className="flex items-center justify-between gap-2 flex-wrap">
           <h1 className="text-3xl font-bold">الطلبات</h1>
-          {orders && orders.length > 0 && (
+          {isOwner && orders && orders.length > 0 && (
             <DeleteAllOrdersButton />
           )}
         </div>

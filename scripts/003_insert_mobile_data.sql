@@ -3,7 +3,7 @@ INSERT INTO categories (name, name_ar, slug) VALUES
   ('Smartphones', 'هواتف ذكية', 'smartphones');
 
 -- Insert sample mobile phone products
-INSERT INTO products (name, name_ar, description, description_ar, price, category_id, images, featured)
+INSERT INTO products (name, name_ar, description, description_ar, price, category_id, images)
 VALUES
   (
     'iPhone 15 Pro',
@@ -12,8 +12,7 @@ VALUES
     'أحدث هاتف آيفون مع شريحة A17 Pro القوية وشاشة ProMotion مذهلة.',
     45000,
     (SELECT id FROM categories WHERE slug = 'smartphones'),
-    ARRAY['/hero/hoodie.png'],
-    true
+    ARRAY['/hero/hoodie.png']
   ),
   (
     'Samsung Galaxy S24 Ultra',
@@ -22,8 +21,7 @@ VALUES
     'اختبر الحقبة الجديدة من الذكاء الاصطناعي مع جالاكسي S24 ألترا.',
     42000,
     (SELECT id FROM categories WHERE slug = 'smartphones'),
-    ARRAY['/hero/streetwear.png'],
-    true
+    ARRAY['/hero/streetwear.png']
   ),
   (
     'Google Pixel 8 Pro',
@@ -32,6 +30,5 @@ VALUES
     'أقوى هاتف Pixel وأكثرها خصوصية وأمانًا حتى الآن.',
     38000,
     (SELECT id FROM categories WHERE slug = 'smartphones'),
-    ARRAY['/hero/summer.png'],
-    true
+    ARRAY['/hero/summer.png']
   );
