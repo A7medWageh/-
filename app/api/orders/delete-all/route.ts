@@ -1,40 +1,43 @@
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function DELETE(request: NextRequest) {
   try {
+    // 1. Authenticate user with standard client
     const supabase = await createClient()
-
     const { data: { user } } = await supabase.auth.getUser()
     
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Check if user is admin
-    const { data: adminUser } = await supabase
+    // 2. Check if user is an admin
+    const { data: adminUser, error: adminError } = await supabase
       .from('admin_users')
       .select('role')
       .eq('id', user.id)
       .single()
 
-    if (!adminUser || !['owner', 'admin'].includes(adminUser.role)) {
+    if (adminError || !adminUser || !['owner', 'admin'].includes(adminUser.role)) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    // Delete all orders (and their items due to CASCADE)
-    const { error, count } = await supabase
+    // 3. Use admin client to delete all orders, bypassing RLS
+    const supabaseAdmin = createAdminClient()
+    const { error, count } = await supabaseAdmin
       .from('orders')
       .delete()
-      .gte('id', '00000000-0000-0000-0000-000000000000')
+      .neq('id', '00000000-0000-0000-0000-000000000000') // Deletes all rows
 
     if (error) {
       throw error
     }
 
-    return NextResponse.json({ message: 'All orders deleted successfully' })
+    return NextResponse.json({ message: 'All orders deleted successfully', count })
   } catch (error) {
     console.error('Delete orders error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    const errorMessage = error instanceof Error ? error.message : 'Internal server error'
+    return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 }

@@ -71,10 +71,19 @@ export default function UsersClient() {
 
   const handleAddAdmin = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // تحقق من صحة الـ UUID
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+    if (!uuidRegex.test(formData.id)) {
+      alert('❌ رقم User ID غير صحيح. يجب أن يكون بصيغة UUID صحيحة')
+      return
+    }
+
     setSaving(true)
 
     try {
-      const { error } = await supabase
+      // تحقق من وجود المستخدم في auth.users أولاً
+      const { error: insertError } = await supabase
         .from('admin_users')
         .insert([{
           id: formData.id,
@@ -82,14 +91,20 @@ export default function UsersClient() {
           role: formData.role
         }])
 
-      if (error) throw error
+      if (insertError) {
+        if (insertError.message?.includes('foreign key')) {
+          throw new Error('❌ هذا User ID غير موجود في النظام. تأكد من تسجيل المستخدم أولاً!')
+        }
+        throw insertError
+      }
       
       setDialogOpen(false)
       setFormData({ id: '', email: '', role: 'admin' })
+      alert('✅ تم إضافة المدير بنجاح!')
       fetchAdmins()
     } catch (error: any) {
       console.error('Add admin error:', error)
-      alert('حدث خطأ: ' + (error.message || 'تأكد من صحة الـ User ID'))
+      alert(error.message || 'حدث خطأ: تأكد من صحة البيانات المدخلة')
     } finally {
       setSaving(false)
     }
